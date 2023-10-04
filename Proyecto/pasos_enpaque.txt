@@ -1,5 +1,12 @@
 1. El archivo a empaquetar tiene que tener el nombre de main.py
 
+1.1 La base de datos la llame enty y tiene una tabla llamada pruebas_1 
+    si quieren probar el programa tienen que cambiarlo por root y crear una 
+    tabla con el numbre pruebas_1 o modificar el nombre de la ta la en todo el
+    codigo     :)
+
+tiene que tener xampp para poder trabajarlo
+
 2. Crea un entorno virtual 
     python -m venv virtual              (Creas)
     virtual\Scripts\activate            (Activar)
