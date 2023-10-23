@@ -1,30 +1,57 @@
-from Usos.Aleatorio import generar_numero_unico
-from Usos.Conector import conexion
 import flet as ft
-Entrada = conexion.cursor()
+import os
 
-def main(page: ft.Page):
-    def button_clicked(e):
-        tb1 = generar_numero_unico()
-        print(tb1)
+def Main(page: ft.Page):
+    page.title = "Mi app"
+    page.appbar = ft.AppBar(
+        title=ft.Text("Mi App"),
+        center_title=True,
+        bgcolor=ft.colors.SURFACE_VARIANT,
+    )
 
-        sql = "INSERT INTO pruebas_1(Identificacion, Nombres, Apellidos, Edad, Recidencia, Fecha_Inicio, Hora_Entrada, Hora_Salida, Sueldo) VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s)"
-        val = (tb1, tb2.value, tb3.value, tb4.value, tb5.value, tb6.value, tb7.value, tb8.value, tb9.value)
-        Entrada.execute(sql, val)
-        conexion.commit()
-        print(Entrada.rowcount, "record inserted.")
-        page.update()
+    def open_file(file_name):
+        # Cambia la ruta según la ubicación de tus archivos en la carpeta "usos"
+        file_path = os.path.join("usos", file_name)
+        os.system(f"python {file_path}")
 
-    t = ft.Text()
-    tb2 = ft.TextField(label="Nombres")
-    tb3 = ft.TextField(label="Apellidos")
-    tb4 = ft.TextField(label="Edad")
-    tb5 = ft.TextField(label="Recidencia")
-    tb6 = ft.TextField(label="Fecha_Inicio")
-    tb7 = ft.TextField(label="Hora_Entrada")
-    tb8 = ft.TextField(label="Hora_Salida")
-    tb9 = ft.TextField(label="Sueldo")
-    b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
-    page.add(tb2, tb3, tb4, tb5, tb6, tb7, tb8, tb9,b, t)
+    icon_1 = ft.IconButton(
+        icon=ft.icons.APP_REGISTRATION_OUTLINED,
+        on_click=lambda _: open_file("Inscripcion.py"),
+        icon_color="blue400",
+        icon_size=60,
+        tooltip="Inscripcion",
+    )
 
-ft.app(main)
+    icon_2 = ft.IconButton(
+        icon=ft.icons.PERSON,
+        on_click=lambda _: open_file("Registro_entrada.py"),
+        icon_color="green",
+        icon_size=60,
+        tooltip="Registro entrada",
+    )
+
+    icon_3 = ft.IconButton(
+        icon=ft.icons.PERSON,
+        on_click=lambda _: open_file("Registro_entrada.py"),
+        icon_color="blue",
+        icon_size=60,
+        tooltip="Registro salida",
+    )
+
+    row_1 = ft.Row(controls=[
+        ft.Container(expand=1),
+        ft.Container(icon_1, expand=1),
+        ft.Container(expand=1),
+    ])
+
+    row_2 = ft.Row(controls=[
+        ft.Container(expand=1),
+        ft.Container(icon_2, expand=1),
+        
+        ft.Container(icon_3, expand=1),
+        ft.Container(expand=1),
+    ])
+
+    page.add(row_1, ft.Divider(height=1, color="grai"),ft.VerticalDivider(width=1, color="white"),row_2)
+
+ft.app(target=Main)
