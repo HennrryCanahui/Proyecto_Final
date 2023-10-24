@@ -2,9 +2,8 @@ import flet as ft
 import mysql.connector
 from datetime import datetime
 
+#Función para establecer una conexión a la base de datos MySQL.
 def establecer_conexion():
-    
-    #Función para establecer una conexión a la base de datos MySQL.
     try:
         conexion = mysql.connector.connect(
             user="root",
@@ -21,13 +20,9 @@ def establecer_conexion():
     except mysql.connector.Error as e:
         print(f"Error al conectar a la base de datos: {e}")
 
-
 def Entradas(page: ft.Page):
 
-### arreglar esto faill 
-        # tiene que identificar que la entadas este vasia mas 
-        # no revisar que si o no hay datos en la hora_salida
-
+    # verifica si el id existe o no 
     def Existencia_id(conexion):
         id_empleado = Empleado.value  # Obtén el valor de Empleado.value
         query = "SELECT * FROM empleados WHERE Identificación = %s"
@@ -49,14 +44,14 @@ def Entradas(page: ft.Page):
             page.update()
             return False
 
-        
+    # Obtine la hora y fecha en el momento que seleccionan el boton de registro
     def obtener_fecha_hora_actual():
         now = datetime.now()
         fecha_actual = now.strftime("%d/%m/%Y")
         hora_actual = now.strftime("%I:%M %p")
         return fecha_actual, hora_actual
-    #Función principal para la interfaz de usuario y operaciones de base de datos.
-
+    
+    # Crea una barra que contiene un titulo
     page.appbar = ft.AppBar(
         title=ft.Text("Registro Entrada"),
         center_title=True,
@@ -66,8 +61,10 @@ def Entradas(page: ft.Page):
     # Establecer conexión a la base de datos
     conexion = establecer_conexion()
 
+    # logica al presionar el boton de registro
     def button_clicked(e):
         
+        # Ejecuta la funcion que revisa la existencia del identificador
         if not Existencia_id(conexion):
             # La identificación no existe, no continuar con el proceso
             return
@@ -82,8 +79,15 @@ def Entradas(page: ft.Page):
             cursor.execute(sql, val)
             conexion.commit()
             print(cursor.rowcount, "record inserted.")
+        
+        dlg = ft.AlertDialog(
+            title=ft.Text("    ¡Registro Exitoso!"),
+            )
+        page.dialog = dlg
+        dlg.open = True
+        page.update()
 
-    # Crear elementos de la interfaz de usuario
+    # Crear el campo para ingresar el identifiacador
     Empleado = ft.TextField(label="ID")
     Validacion = ft.ElevatedButton(text="Registrar", on_click=button_clicked)
     
