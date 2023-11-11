@@ -2,7 +2,7 @@ import mysql.connector
 import flet as ft
 import random
 
-# Función para establecer la conexión a la base de datos
+#Función para establecer una conexión a la base de datos MySQL.
 def establecer_conexion():
     try:
         conexion = mysql.connector.connect(
@@ -35,23 +35,24 @@ def verificar_numero(numero, conexion):
         return cursor.fetchone() is not None
 
 # Función principal para el formulario
-
 def Registro(page: ft.Page):
 
+    # Crea una barra que contiene un titulo
     page.appbar = ft.AppBar(
         title=ft.Text("Registro"),
         center_title=True,
         bgcolor=ft.colors.SURFACE_VARIANT,
     )
-
+    # establece la conececcion y la almacena en una variable
     conexion = establecer_conexion()
 
+    # tb1 es el numero generado
     tb1 = None  
 
+    # Revisa que los campos del formulario no esten vacios 
     def validar_campos_vacios():
         campos = [tb2, tb3, tb4, tb5, tb6_1, tb6_2, tb6_3, tb7, tb7_1, tb8, tb8_1, tb9]  # Lista de campos a verificar
         campos_vacios = []
-
         for campo in campos:
             if isinstance(campo, ft.Dropdown):  # Verificar si el campo es un Dropdown
                 if campo.value is None:
@@ -74,6 +75,7 @@ def Registro(page: ft.Page):
 
     # Función ejecutada al hacer clic en el botón
     def button_clicked(e):
+
         # Revisa si hay campos de informacion vacios y si hay manda un mensaje
         if not validar_campos_vacios():
             return # si no encuentra nada sigue el programa con normalida
@@ -95,6 +97,7 @@ def Registro(page: ft.Page):
         sql = "INSERT INTO empleados(Identificación, Nombre, Apellidos, Edad, Recidencia, Fecha_Inicio, Hora_Entrada, Hora_Salida, Sueldo) VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s)"
         val = (tb1, tb2.value, tb3.value, tb4.value, tb5.value, fecha_Comienso, hora_entrada, hora_salida, tb9.value)
 
+        # Ejecuta el insert con los datos del formulario
         with conexion.cursor() as cursor:
             cursor.execute(sql, val)
 
@@ -122,13 +125,11 @@ def Registro(page: ft.Page):
             title=ft.Text("¡Registro Exitoso!"),
             content=ft.Text(f"El identificador es : {tb1}"),
             )
-        
         page.dialog = dlg
         dlg.open = True
         page.update()
 
     # Definir campos de texto y botón
-    
     tb2 = ft.TextField(label="Nombres",)
     tb3 = ft.TextField(label="Apellidos")
     tb4 = ft.TextField(label="Edad")
